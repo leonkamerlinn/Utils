@@ -16,6 +16,6 @@ allprojects {
 	
 ```gradle
 dependencies {
-    implementation 'com.github.leonkamerlinn:Utils:Tag'
+    implementation 'com.github.leonkamerlinn:Utils:1.0'
 }
 ```
