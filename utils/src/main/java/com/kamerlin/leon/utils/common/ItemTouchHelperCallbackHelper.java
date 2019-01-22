@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.kamerlin.leon.utils.R;
+import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.mjolnir.RecyclerViewItemTouchHelper;
 
 import androidx.annotation.NonNull;

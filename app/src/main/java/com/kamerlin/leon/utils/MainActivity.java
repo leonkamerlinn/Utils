@@ -1,13 +1,14 @@
 package com.kamerlin.leon.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
 import com.kamerlin.leon.utils.common.SwipeToDeleteCallback;
-import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerAdapter;
 import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private MjolnirRecyclerView recyclerView;
     private SimpleAdapter adapter;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this, adapter);
 
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -55,6 +58,28 @@ public class MainActivity extends AppCompatActivity {
         //adapter.setFooter(R.layout.view_footer);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    @SuppressLint("CheckResult")
+    private void rx_permission() {
+        final RxPermissions rxPermissions = new RxPermissions(this);
+
+
+        rxPermissions
+                .requestEach(Manifest.permission.CAMERA)
+                .subscribe(permission -> {
+                    if (permission.granted) {
+                        Toast.makeText(this, "Granted", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        Toast.makeText(this, "Not granted", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
+
+        rxPermissions.isRevoked(Manifest.permission.CALL_PHONE);
     }
 
 

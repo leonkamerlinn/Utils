@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
 
+import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerAdapter;
 import com.kamerlin.leon.utils.mjolnir.RecyclerViewItemTouchHelper;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,11 @@ public class SwipeToDeleteCallback extends ItemTouchHelperCallbackHelper {
     }
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        if (recyclerView.getAdapter() instanceof MjolnirRecyclerAdapter) {
+            MjolnirRecyclerAdapter mjolnirRecyclerAdapter = (MjolnirRecyclerAdapter) recyclerView.getAdapter();
+            if(mjolnirRecyclerAdapter.isHeader(viewHolder.getAdapterPosition()) || mjolnirRecyclerAdapter.isFooter(viewHolder.getAdapterPosition())) return 0;
+
+        }
 
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;

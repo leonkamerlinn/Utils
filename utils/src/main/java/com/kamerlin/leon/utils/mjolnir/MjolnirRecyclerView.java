@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Custom implementation of RecyclerView, which has support for Empty view.
- *
+ *l
  * Created by Željko Plesac on 27/09/16.
  */
 public class MjolnirRecyclerView extends RecyclerView {
@@ -42,6 +42,8 @@ public class MjolnirRecyclerView extends RecyclerView {
             checkIfEmpty();
             ((MjolnirRecyclerAdapter) getAdapter()).setLoading(false);
         }
+
+
     };
 
     public MjolnirRecyclerView(Context context) {

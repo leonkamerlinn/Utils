@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.kamerlin.leon.utils.R;
+import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.materialpallete.MaterialColor;
 
 import androidx.appcompat.widget.LinearLayoutCompat;

@@ -1,6 +1,6 @@
 package com.kamerlin.leon.utils.materialpallete.colors;
 
-import com.kamerlin.leon.utils.R;
+import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.materialpallete.MaterialColor;
 
 public class Grey extends MaterialColor {

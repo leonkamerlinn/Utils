@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.flexbox.FlexboxLayout;
-import com.kamerlin.leon.utils.R;
+import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.materialpallete.MaterialColor;
 import com.kamerlin.leon.utils.materialpallete.MaterialColorFactory;
 

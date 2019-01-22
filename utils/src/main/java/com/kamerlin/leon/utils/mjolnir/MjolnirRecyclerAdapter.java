@@ -4,12 +4,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -20,17 +25,8 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<MjolnirRecyclerAdapter.MjolnirViewHolder> implements RecyclerViewItemTouchHelper {
+public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<MjolnirViewHolder> implements RecyclerViewItemTouchHelper {
 
     public static final int TYPE_HEADER = 111;
 
@@ -64,41 +60,7 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
 
     protected RecyclerView.LayoutManager layoutManager;
 
-    protected boolean multiSelect = false;
 
-    protected List<E> selectedItems = new ArrayList<>();
-
-    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            multiSelect = true;
-            menu.add("Delete");
-            //MenuInflater menuInflater = mode.getMenuInflater();
-            //menuInflater.inflate(R.menu.main_menu, menu);
-
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            removeAll(selectedItems);
-            mode.finish();
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            multiSelect = false;
-            selectedItems.clear();
-            notifyDataSetChanged();
-        }
-    };
 
     public MjolnirRecyclerAdapter(Context context, Collection<E> list) {
         this.context = context;
@@ -136,12 +98,12 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
     protected abstract MjolnirViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType);
 
     @Override
-    public void onBindViewHolder(MjolnirRecyclerAdapter.MjolnirViewHolder holder, int position) {
+    public void onBindViewHolder(MjolnirViewHolder holder, int position) {
         onBindViewHolder(holder, position, Collections.emptyList());
     }
 
     @Override
-    public void onBindViewHolder(MjolnirRecyclerAdapter.MjolnirViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(MjolnirViewHolder holder, int position, List<Object> payloads) {
 
         //check what type of view our position is
         switch (getItemViewType(position)) {
@@ -152,7 +114,7 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
             default:
                 position = calculateIndex(position, true);
                 E item = items.get(position);
-                holder.bind(item, position, payloads);
+                holder.bind(item, position);
 
                 if (nextPageListener != null && !isLoading && position >= getCollectionCount() - getNextPageOffset() && !isCancelled) {
                     isLoading = true;
@@ -480,14 +442,14 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
     /**
      * @return true if item at {@param postion} is footer
      */
-    protected boolean isFooter(int position) {
+    public boolean isFooter(int position) {
         return hasFooter() && position == getItemCount() - 1;
     }
 
     /**
      * @return true if item at {@param postion} is header
      */
-    protected boolean isHeader(int position) {
+    public boolean isHeader(int position) {
         return hasHeader() && position == 0;
     }
 
@@ -608,17 +570,14 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
      */
     private void postDiffResults(final Collection<E> newItems, final DiffUtil.DiffResult diffResult, final DiffUtil.Callback callback) {
         if (!isCancelled) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    pendingUpdates.remove();
-                    diffResult.dispatchUpdatesTo(MjolnirRecyclerAdapter.this);
-                    items.clear();
-                    items.addAll(newItems);
+            handler.post(() -> {
+                pendingUpdates.remove();
+                diffResult.dispatchUpdatesTo(MjolnirRecyclerAdapter.this);
+                items.clear();
+                items.addAll(newItems);
 
-                    if (pendingUpdates.size() > 0) {
-                        updateData(pendingUpdates.peek(), callback);
-                    }
+                if (pendingUpdates.size() > 0) {
+                    updateData(pendingUpdates.peek(), callback);
                 }
             });
         }
@@ -638,57 +597,42 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
         notifyItemChanged(toPosition);
     }
 
-    public abstract class MjolnirViewHolder<T> extends RecyclerView.ViewHolder {
+    public abstract class ItemViewHolder extends MjolnirViewHolder<E> {
 
-        public MjolnirViewHolder(View itemView) {
+
+
+        public ItemViewHolder(View itemView) {
             super(itemView);
         }
 
-        void selectItem(E item) {
-            if (multiSelect) {
-                if (selectedItems.contains(item)) {
-                    selectedItems.remove(item);
-                    itemView.setBackgroundColor(Color.WHITE);
-                } else {
-                    selectedItems.add(item);
-                    itemView.setBackgroundColor(Color.LTGRAY);
-                }
-            }
-        }
 
-        protected void bind(E item, int position, List<Object> payloads) {
+        @Override
+        protected void bind(E item, int position) {
             itemView.setBackgroundColor(Color.WHITE);
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClick(position, item);
                 }
-                selectItem(item);
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    ((AppCompatActivity)view.getContext()).startSupportActionMode(actionModeCallbacks);
-                    selectItem(item);
-                    return true;
-                }
-            });
+
         }
     }
 
 
 
-    class HeaderFooterViewHolder<E> extends MjolnirViewHolder<E> {
+    public class HeaderFooterViewHolder extends MjolnirViewHolder<E> {
 
         public HeaderFooterViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
-        protected void bind(Object item, int position, List payloads) {
+        protected void bind(Object item, int position) {
 
         }
     }
+
 
 
 
