@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.mjolnir.RecyclerViewItemTouchListener;
 
 public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
@@ -15,7 +16,8 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
     protected RecyclerViewItemTouchListener recyclerViewItemTouchListener;
     protected Drawable leftIcon, rightIcon;
     protected ColorDrawable background;
-    protected int backgroundColor;
+    protected boolean dragEnabled, swipEnabled;
+    private int backgroundColor;
 
     public ItemTouchCallbackHelper(ItemTouchCallback.Builder builder) {
         this.context = builder.context;
@@ -23,6 +25,8 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
         setLeftIcon(builder.leftIcon);
         setRightIcon(builder.rightIcon);
         setListener(builder.listener);
+        enableDrag(builder.dragEnabled);
+        enableSwip(builder.swipeEnabled);
         background = new ColorDrawable();
     }
 
@@ -58,10 +62,16 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
         backgroundColor = color;
     }
 
+    public int getBackgroundColor() {
+        if (backgroundColor == 0) {
+            return R.color.design_default_color_primary;
+        }
+        return backgroundColor;
+    }
+
     private void setListener(RecyclerViewItemTouchListener listener) {
         this.recyclerViewItemTouchListener = listener;
     }
-
 
     private void setLeftIcon(Drawable drawable) {
         leftIcon = drawable;
@@ -72,6 +82,14 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
         rightIcon = drawable;
     }
 
+    public void enableDrag(boolean enabled) {
+        this.dragEnabled = enabled;
+    }
+
+    public void enableSwip(boolean enabled) {
+        this.swipEnabled = enabled;
+    }
 
 
+    
 }

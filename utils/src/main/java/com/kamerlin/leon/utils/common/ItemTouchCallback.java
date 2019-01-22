@@ -27,8 +27,8 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
 
         }
 
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        int dragFlags = dragEnabled ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
+        int swipeFlags = swipEnabled ? ItemTouchHelper.START | ItemTouchHelper.END : 0;
         return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags);
     }
 
@@ -48,7 +48,7 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
         int leftRectBound, rightRectBound;
 
         // Draw the red delete background
-        background.setColor(backgroundColor);
+        background.setColor(getBackgroundColor());
         if (dX >= 0) {
             // swiping right,  dX is positive
             background.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + (int)dX, itemView.getBottom());
@@ -81,6 +81,7 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
         public final Context context;
         public RecyclerViewItemTouchListener listener;
         public Drawable leftIcon, rightIcon;
+        public boolean dragEnabled = false, swipeEnabled = true;
 
 
         public Builder(Context context) {
@@ -112,6 +113,16 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
 
         public Builder setRightIcon(Drawable drawable) {
             this.rightIcon = drawable;
+            return this;
+        }
+
+        public Builder enableDrag(boolean enabled) {
+            this.dragEnabled = enabled;
+            return this;
+        }
+
+        public Builder enableSwip(boolean enabled) {
+            this.swipeEnabled = enabled;
             return this;
         }
 

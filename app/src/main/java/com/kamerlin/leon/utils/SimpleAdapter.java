@@ -44,8 +44,14 @@ public class SimpleAdapter extends ActionModeRecyclerViewAdapter<String> {
             tvPosition.setText(String.valueOf(position).concat("."));
             tvText.setText(item);
         }
+
+
     }
 
 
 
+    @Override
+    public String getTitle(int count) {
+        return "Hello: "+ count;
+    }
 }

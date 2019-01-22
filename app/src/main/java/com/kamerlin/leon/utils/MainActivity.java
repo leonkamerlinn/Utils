@@ -1,22 +1,18 @@
 package com.kamerlin.leon.utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
-
-import com.kamerlin.leon.utils.common.ItemTouchCallbackHelper;
-import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
-import com.kamerlin.leon.utils.common.ItemTouchCallback;
-import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.kamerlin.leon.utils.common.ItemTouchCallback;
+import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
+import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.add("4");
         adapter.add("5");
         adapter.add("6");
-        adapter.setHeader(R.layout.view_header);
 
-        adapter.setOnClickListener((index, item) -> Toast.makeText(this, item, Toast.LENGTH_SHORT).show());
+
+        adapter.setHeader(R.layout.view_header);
+        adapter.setFooter(R.layout.view_footer);
+
 
         ItemTouchCallback swipeToDeleteCallback = new ItemTouchCallback.Builder(this)
                 .setListener(adapter)
@@ -61,33 +59,14 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //adapter.setHeader(R.layout.view_header);
-        //adapter.setFooter(R.layout.view_footer);
+
+
+
 
         recyclerView.setAdapter(adapter);
     }
 
-    @SuppressLint("CheckResult")
-    private void rx_permission() {
-        final RxPermissions rxPermissions = new RxPermissions(this);
 
-
-        rxPermissions
-                .requestEach(Manifest.permission.CAMERA)
-                .subscribe(permission -> {
-                    if (permission.granted) {
-                        Toast.makeText(this, "Granted", Toast.LENGTH_SHORT).show();
-                    } else {
-
-
-                        Toast.makeText(this, "Not granted", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-
-        rxPermissions.isRevoked(Manifest.permission.CALL_PHONE);
-    }
 
 
     public void showNoticeDialog() {

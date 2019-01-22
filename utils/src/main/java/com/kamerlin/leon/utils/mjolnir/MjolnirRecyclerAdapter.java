@@ -591,11 +591,14 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
+        System.out.println(String.format("From: %s, To: %s", fromPosition, toPosition));
         try {
-            Collections.swap(items, fromPosition, toPosition);
+            Collections.swap(items, fromPosition-1, toPosition-1);
             notifyItemMoved(fromPosition, toPosition);
+            notifyItemChanged(fromPosition);
+            notifyItemChanged(toPosition);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
     }

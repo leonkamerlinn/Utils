@@ -18,11 +18,15 @@ import java.util.List;
 
 public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAdapter<E> {
 
-
-
-
     protected List<E> selectedItems = new ArrayList<>();
-    public ActionMode.Callback  provideDefaultActionModeCallbacks() {
+    protected ActionMode actionMode;
+    protected boolean isActionModeActive() {
+        return actionMode != null;
+    }
+    protected ActionMode.Callback actionModeCallbacks;
+
+
+    protected ActionMode.Callback  provideDefaultActionModeCallbacks() {
 
         return new ActionMode.Callback() {
             @Override
@@ -56,15 +60,8 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
         };
     }
 
-    protected ActionMode actionMode;
-    protected boolean isActionModeActive() {
-        return actionMode != null;
-    }
 
-
-    protected ActionMode.Callback actionModeCallbacks;
-
-    public void setActionModelCallBacks(ActionMode.Callback actionModeCallbacks) {
+    private void setActionModelCallBacks(ActionMode.Callback actionModeCallbacks) {
         this.actionModeCallbacks = actionModeCallbacks;
     }
 
@@ -75,7 +72,6 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
 
     public abstract class ItemViewHolder extends MjolnirViewHolder<E> {
-
 
 
         public ItemViewHolder(View itemView) {
@@ -121,10 +117,14 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
         }
 
         private void updateCount() {
-            if (actionMode == null) return;
-            actionMode.setTitle("Count: "+selectedItems.size());
+            if (actionMode == null || getTitle(selectedItems.size()) == null) return;
+            actionMode.setTitle(getTitle(selectedItems.size()));
             actionMode.invalidate();
         }
+    }
+
+    public String getTitle(int count) {
+        return "Count: "+count;
     }
 
 
