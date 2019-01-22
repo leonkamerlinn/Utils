@@ -2,11 +2,13 @@ package com.kamerlin.leon.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.kamerlin.leon.utils.common.ItemTouchCallbackHelper;
 import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
-import com.kamerlin.leon.utils.common.SwipeToDeleteCallback;
+import com.kamerlin.leon.utils.common.ItemTouchCallback;
 import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -48,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.setOnClickListener((index, item) -> Toast.makeText(this, item, Toast.LENGTH_SHORT).show());
 
-        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this, adapter);
+        ItemTouchCallback swipeToDeleteCallback = new ItemTouchCallback.Builder(this)
+                .setListener(adapter)
+                .setBackgroundColor(Color.RED)
+                .setLeftIcon(R.drawable.ic_delete_white_24)
+                .setRightIcon(R.drawable.ic_delete_white_24)
+                .build();
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);

@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<MjolnirViewHolder> implements RecyclerViewItemTouchHelper {
+public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<MjolnirViewHolder> implements RecyclerViewItemTouchListener {
 
     public static final int TYPE_HEADER = 111;
 
@@ -591,10 +591,13 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(items, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-        notifyItemChanged(fromPosition);
-        notifyItemChanged(toPosition);
+        try {
+            Collections.swap(items, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public abstract class ItemViewHolder extends MjolnirViewHolder<E> {

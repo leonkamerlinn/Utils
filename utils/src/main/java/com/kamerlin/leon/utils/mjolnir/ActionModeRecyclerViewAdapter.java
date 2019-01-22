@@ -51,14 +51,14 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
                 selectedItems.clear();
                 notifyDataSetChanged();
-                mActionMode = null;
+                actionMode = null;
             }
         };
     }
 
-    protected ActionMode mActionMode;
+    protected ActionMode actionMode;
     protected boolean isActionModeActive() {
-        return mActionMode != null;
+        return actionMode != null;
     }
 
 
@@ -91,7 +91,10 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
                     selectedItems.add(item);
                     itemView.setBackgroundColor(Color.LTGRAY);
                 }
-
+                if (selectedItems.size() == 0) {
+                    actionMode.finish();
+                    return;
+                }
                 updateCount();
             }
         }
@@ -109,19 +112,18 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (actionModeCallbacks == null) return false;
-                    mActionMode = ((AppCompatActivity) view.getContext()).startSupportActionMode(actionModeCallbacks);
+                    if (actionModeCallbacks == null || isActionModeActive()) return false;
+                    actionMode = ((AppCompatActivity) view.getContext()).startSupportActionMode(actionModeCallbacks);
                     selectItem(item);
-                    updateCount();
                     return true;
                 }
             });
         }
 
         private void updateCount() {
-            if (mActionMode == null) return;
-            mActionMode.setTitle("Count: "+selectedItems.size());
-            mActionMode.invalidate();
+            if (actionMode == null) return;
+            actionMode.setTitle("Count: "+selectedItems.size());
+            actionMode.invalidate();
         }
     }
 
