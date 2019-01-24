@@ -6,39 +6,108 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.flexbox.FlexboxLayout;
-import com.kamerlin.leon.utils.library.R;
-import com.kamerlin.leon.utils.materialpallete.MaterialColor;
-import com.kamerlin.leon.utils.materialpallete.MaterialColorFactory;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.kamerlin.leon.utils.library.R;
+import com.kamerlin.leon.utils.materialpallete.MaterialColor;
+import com.kamerlin.leon.utils.materialpallete.MaterialColorFactory;
+
 public class MaterialPalettePickerDialog extends DialogFragment {
+    public static final String TAG = MaterialPalettePickerDialog.class.getSimpleName();
+
     private int mCurrentActive;
-    private String mColorName;
-    private MaterialPaletteSelector mMaterialPaletteSelector;
+    private MaterialPaletteListener mMaterialPaletteListener;
+    private String mTitle, mPositiveButtonText, mNegativeButtonText, mColorName;
+    private boolean mShowTextInputEditTextt;
+    private TextInputEditText mTextInputEditText;
 
-    public MaterialPalettePickerDialog() {
 
+    private MaterialPalettePickerDialog() {
+        mTitle = "Material Palette Colors";
+        mPositiveButtonText = "Ok";
+        mNegativeButtonText = "Cancel";
+        mShowTextInputEditTextt = false;
     }
 
+
+    public TextInputEditText getTextInputEditText() {
+        return mTextInputEditText;
+    }
+
+
+    private synchronized void setMaterialPaletteListener(MaterialPaletteListener materialPaletteListener) {
+        if (mMaterialPaletteListener == null && materialPaletteListener != null) {
+            mMaterialPaletteListener = materialPaletteListener;
+        }
+    }
+
+
+
+    private void setTitle(String title) {
+        if (title == null) return;
+        mTitle = title;
+    }
+
+    private void setPositiveButtonText(String text) {
+        if (text == null) return;
+        mPositiveButtonText = text;
+    }
+
+    private void setNegativeButtonText(String text) {
+        if (text == null) return;
+        mNegativeButtonText = text;
+    }
+
+    private void showTextInputEditText(boolean show) {
+        mShowTextInputEditTextt = show;
+    }
+
+    private static MaterialPalettePickerDialog newInstance() {
+        MaterialPalettePickerDialog dialog = new MaterialPalettePickerDialog();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        dialog.setArguments(args);
+
+        return dialog;
+    }
 
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        if (getActivity() instanceof MaterialPaletteSelector) {
-            mMaterialPaletteSelector = (MaterialPaletteSelector)getActivity();
+        if (getActivity() instanceof MaterialPaletteListener) {
+            mMaterialPaletteListener = (MaterialPaletteListener)getActivity();
         }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.material_palette, null);
+
+        TextInputLayout textInputLayout = view.findViewById(R.id.textInputLayout);
+        mTextInputEditText = view.findViewById(R.id.textInputEditText);
+        ScrollView scrollView = view.findViewById(R.id.scrollView);
+        ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout);
+
+        if (!mShowTextInputEditTextt) {
+            textInputLayout.setVisibility(View.INVISIBLE);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.clear(scrollView.getId(), ConstraintSet.TOP);
+
+            constraintSet.applyTo(constraintLayout);
+        }
         FlexboxLayout rootLayout = view.findViewById(R.id.rootLayout);
         for (int i = 0; i < rootLayout.getChildCount(); i++) {
             if (rootLayout.getChildAt(i) instanceof ColorIcon) {
@@ -64,14 +133,14 @@ public class MaterialPalettePickerDialog extends DialogFragment {
 
                         if (v instanceof ColorIcon) {
                             ColorIcon current = (ColorIcon)v;
-                            ColorIcon previus = (ColorIcon) rootLayout.getChildAt(mCurrentActive);
-                            previus.setActive(false);
+                            ColorIcon previous = (ColorIcon) rootLayout.getChildAt(mCurrentActive);
+                            previous.setActive(false);
                             current.setActive(true);
                             mCurrentActive = id;
                             mColorName = current.getColorName();
 
-                            if (mMaterialPaletteSelector != null) {
-                                mMaterialPaletteSelector.onColorChange(MaterialColorFactory.getColor(mColorName), mColorName);
+                            if (mMaterialPaletteListener != null) {
+                                mMaterialPaletteListener.onColorChanged(MaterialColorFactory.getColor(mColorName), mColorName);
                             }
                         }
 
@@ -81,15 +150,16 @@ public class MaterialPalettePickerDialog extends DialogFragment {
             }
         }
 
+
+
+
         builder.setView(view)
-                .setTitle("Material Palette Color")
+                .setTitle(mTitle)
                 // Add action buttons
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if (mMaterialPaletteSelector != null) {
-                            mMaterialPaletteSelector.onColorSelected(MaterialColorFactory.getColor(mColorName), mColorName);
-                        }
+                        mMaterialPaletteListener.onColorSelected(MaterialColorFactory.getColor(mColorName), mColorName);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -113,8 +183,59 @@ public class MaterialPalettePickerDialog extends DialogFragment {
     }
 
 
-    public interface MaterialPaletteSelector {
-        void onColorChange(MaterialColor materialColor, String colorName);
+    public interface MaterialPaletteListener {
+        void onColorChanged(MaterialColor materialColor, String colorName);
         void onColorSelected(MaterialColor materialColor, String colorName);
+    }
+
+
+
+    public static class Builder {
+        private String title;
+        private MaterialPaletteListener materialPaletteListener;
+        private String positiveButtonText;
+        private String negativeButtonText;
+        private boolean showTextInputEditText;
+
+        public Builder() {
+            showTextInputEditText = false;
+        }
+
+
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setPositiveButtonText(String text) {
+            this.positiveButtonText = text;
+            return this;
+        }
+
+        public Builder setNegativeButtonText(String text) {
+            this.negativeButtonText = text;
+            return this;
+        }
+
+        public Builder setMaterialPaletteListener(MaterialPaletteListener materialPaletteListener) {
+            this.materialPaletteListener = materialPaletteListener;
+            return this;
+        }
+
+        public Builder showTextInputEditText(boolean showTextInputEditText) {
+            this.showTextInputEditText = showTextInputEditText;
+            return this;
+        }
+
+        public MaterialPalettePickerDialog build() {
+            MaterialPalettePickerDialog dialog = MaterialPalettePickerDialog.newInstance();
+            dialog.setMaterialPaletteListener(materialPaletteListener);
+            dialog.setTitle(title);
+            dialog.setNegativeButtonText(negativeButtonText);
+            dialog.setPositiveButtonText(positiveButtonText);
+            dialog.showTextInputEditText(showTextInputEditText);
+            return dialog;
+        }
+
     }
 }

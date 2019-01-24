@@ -44,7 +44,11 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                removeAll(selectedItems);
+                int itemId = item.getItemId();
+                if (itemId == R.id.delete) {
+                    removeAll(selectedItems);
+                }
+
                 mode.finish();
 
                 return true;

@@ -586,7 +586,7 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
     @Override
     public void onItemDismiss(int position) {
 
-        this.remove(position);
+        this.remove(position+1);
     }
 
     @Override

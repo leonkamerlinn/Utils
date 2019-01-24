@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Utils</string>
-    <string name="help">Help</string>
+    <string name="close">Close</string>
     <string name="delete">Delete</string>
 </resources>
