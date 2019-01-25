@@ -12,7 +12,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
-import com.kamerlin.leon.utils.materialpallete.MaterialColor;
+
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,28 +70,35 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void onError(MaterialPalettePickerDialog dialog) {
+
+    }
+
+    @SuppressLint("CheckResult")
     private void showMaterialColorPicker() {
         // show material color picker
         MaterialPalettePickerDialog dialog = new MaterialPalettePickerDialog.Builder()
-                .setMaterialPaletteListener(new MaterialPalettePickerDialog.MaterialPaletteListener() {
-                    @Override
-                    public void onColorChanged(MaterialColor materialColor, String colorName) {
-
-                        Toast.makeText(MainActivity.this, "Color Changed: " + colorName, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onColorSelected(MaterialColor materialColor, String colorName) {
-                        System.out.println(colorName);
-                        Toast.makeText(MainActivity.this, "Color Selected: " + colorName, Toast.LENGTH_SHORT).show();
-                    }
-                })
                 .showTextInputEditText(true)
                 .build();
 
 
         dialog.show(getSupportFragmentManager(), MaterialPalettePickerDialog.TAG);
 
+
+
+        Observable.combineLatest(
+                dialog.getColorNameObservable().lastOrError().toObservable(),
+                dialog.getTitleObservable().lastOrError().toObservable(),
+                dialog.getPositiveButtonClickObservable().lastOrError().toObservable(),
+                new Function3<String, String, Boolean, String[]>() {
+                    @Override
+                    public String[] apply(String s, String s2, Boolean aBoolean) {
+                        return new String[] {s, s2};
+                    }
+                }
+        ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(System.out::println, System.err::println);
 
 
     }

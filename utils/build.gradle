@@ -36,6 +36,10 @@ dependencies {
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
+    //rxjava2
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
