@@ -4,17 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.kamerlin.leon.utils.common.ItemTouchCallback;
 import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
 
-public class MjolnirRecyclerViewDemo extends AppCompatActivity {
+public class MjolnirRecyclerViewDemo extends AppCompatActivity implements SimpleAdapter.StartDrag {
 
     private MjolnirRecyclerView mRecyclerView;
     private SimpleAdapter mAdapter;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity {
 
         mAdapter.setHeader(R.layout.view_header);
         mAdapter.setFooter(R.layout.view_footer);
+        mAdapter.setItemColor(Color.MAGENTA);
 
 
         ItemTouchCallback swipeToDeleteCallback = new ItemTouchCallback.Builder(this)
@@ -46,12 +50,14 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity {
                 .setBackgroundColor(Color.RED)
                 .setLeftIcon(R.drawable.ic_delete_white_24)
                 .setRightIcon(R.drawable.ic_delete_white_24)
-                .enableDrag(true)
+                .enableItemViewSwipe(true)
+                .enableLongPressDrag(true)
                 .build();
 
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
 
 
 
@@ -64,5 +70,11 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity {
         mAdapter.add("4");
         mAdapter.add("5");
         mAdapter.add("6");
+    }
+
+    @Override
+    public void onDrag(RecyclerView.ViewHolder viewHolder) {
+        Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
+        itemTouchHelper.startDrag(viewHolder);
     }
 }

@@ -27,11 +27,9 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
 
         }
 
-        int dragFlags = dragEnabled ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
-        int swipeFlags = swipEnabled ? ItemTouchHelper.START | ItemTouchHelper.END : 0;
+
         return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags);
     }
-
 
 
 
@@ -81,11 +79,16 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
         public final Context context;
         public RecyclerViewItemTouchListener listener;
         public Drawable leftIcon, rightIcon;
-        public boolean dragEnabled = false, swipeEnabled = true;
+        public int dragFlags;
+        public int swipeFlags;
+        public boolean enableLongPressDrag;
+        public boolean enableItemViewSwipe;
 
 
         public Builder(Context context) {
             this.context = context;
+            dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         }
 
         public Builder setBackgroundColor(int color) {
@@ -116,13 +119,23 @@ public class ItemTouchCallback extends ItemTouchCallbackHelper {
             return this;
         }
 
-        public Builder enableDrag(boolean enabled) {
-            this.dragEnabled = enabled;
+        public Builder setDragFlags(int flag) {
+            this.dragFlags = flag;
             return this;
         }
 
-        public Builder enableSwip(boolean enabled) {
-            this.swipeEnabled = enabled;
+        public Builder setSwipeFlags(int flag) {
+            this.swipeFlags = flag;
+            return this;
+        }
+
+        public Builder enableLongPressDrag(boolean enable) {
+            this.enableLongPressDrag = enable;
+            return this;
+        }
+
+        public Builder enableItemViewSwipe(boolean enable) {
+            enableItemViewSwipe = enable;
             return this;
         }
 

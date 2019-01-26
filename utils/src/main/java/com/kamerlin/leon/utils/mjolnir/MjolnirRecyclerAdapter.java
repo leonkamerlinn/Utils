@@ -67,6 +67,7 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
         this.items = new ArrayList<>(list);
     }
 
+
     @Override
     public MjolnirViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Check if we have to inflate ItemViewHolder of HeaderFooterHolder
@@ -604,8 +605,6 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
     }
 
     public abstract class ItemViewHolder extends MjolnirViewHolder<E> {
-
-
 
         public ItemViewHolder(View itemView) {
             super(itemView);

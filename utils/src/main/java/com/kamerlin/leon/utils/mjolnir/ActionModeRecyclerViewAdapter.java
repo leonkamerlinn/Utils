@@ -20,6 +20,16 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
     protected List<E> selectedItems = new ArrayList<>();
     protected ActionMode actionMode;
+    private int mHighlightItemColor;
+    private int mItemColor;
+
+
+
+    @Override
+    public void onBindViewHolder(MjolnirViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+    }
+
     protected boolean isActionModeActive() {
         return actionMode != null;
     }
@@ -71,7 +81,17 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
     public ActionModeRecyclerViewAdapter(Context context, Collection<E> list) {
         super(context, list);
+        setHighlightItemColor(Color.LTGRAY);
+        setItemColor(Color.WHITE);
         setActionModelCallBacks(provideDefaultActionModeCallbacks());
+    }
+
+    public void setHighlightItemColor(int color) {
+        mHighlightItemColor = color;
+    }
+
+    public void setItemColor(int color) {
+        mItemColor = color;
     }
 
 
@@ -86,10 +106,10 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
             if (isActionModeActive()) {
                 if (selectedItems.contains(item)) {
                     selectedItems.remove(item);
-                    itemView.setBackgroundColor(Color.WHITE);
+                    itemView.setBackgroundColor(mItemColor);
                 } else {
                     selectedItems.add(item);
-                    itemView.setBackgroundColor(Color.LTGRAY);
+                    itemView.setBackgroundColor(mHighlightItemColor);
                 }
                 if (selectedItems.size() == 0) {
                     actionMode.finish();
@@ -101,7 +121,7 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
         @Override
         protected void bind(E item, int position) {
-            itemView.setBackgroundColor(Color.WHITE);
+            itemView.setBackgroundColor(mItemColor);
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClick(position, item);

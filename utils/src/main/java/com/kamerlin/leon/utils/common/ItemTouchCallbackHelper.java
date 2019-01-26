@@ -16,18 +16,33 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
     protected RecyclerViewItemTouchListener recyclerViewItemTouchListener;
     protected Drawable leftIcon, rightIcon;
     protected ColorDrawable background;
-    protected boolean dragEnabled, swipEnabled;
+    protected int dragFlags;
+    protected int swipeFlags;
     private int backgroundColor;
+    private boolean enableLongPressDrag;
+    private boolean enableItemViewSwipe;
 
     public ItemTouchCallbackHelper(ItemTouchCallback.Builder builder) {
         this.context = builder.context;
+
+
         setBackgroundColor(builder.backgroundColor);
         setLeftIcon(builder.leftIcon);
         setRightIcon(builder.rightIcon);
         setListener(builder.listener);
-        enableDrag(builder.dragEnabled);
-        enableSwip(builder.swipeEnabled);
+        setDragFlags(builder.dragFlags);
+        setSwipeFlags(builder.swipeFlags);
+        enableLongPressDrag(builder.enableLongPressDrag);
+        enableItemViewSwipe(builder.enableItemViewSwipe);
         background = new ColorDrawable();
+    }
+
+    private void enableItemViewSwipe(boolean enableItemViewSwipe) {
+        this.enableItemViewSwipe = enableItemViewSwipe;
+    }
+
+    private void enableLongPressDrag(boolean enableLongPressDrag) {
+        this.enableLongPressDrag = enableLongPressDrag;
     }
 
     @Override
@@ -42,6 +57,7 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
             return false;
         }
 
+
         int from = viewHolder.getAdapterPosition();
         int to = viewHolder1.getAdapterPosition();
         recyclerViewItemTouchListener.onItemMove(from, to);
@@ -50,12 +66,14 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return enableLongPressDrag;
     }
+
+
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return true;
+        return enableItemViewSwipe;
     }
 
     private void setBackgroundColor(int color) {
@@ -82,12 +100,12 @@ public abstract class ItemTouchCallbackHelper extends ItemTouchHelper.Callback {
         rightIcon = drawable;
     }
 
-    public void enableDrag(boolean enabled) {
-        this.dragEnabled = enabled;
+    public void setDragFlags(int enabled) {
+        this.dragFlags = enabled;
     }
 
-    public void enableSwip(boolean enabled) {
-        this.swipEnabled = enabled;
+    public void setSwipeFlags(int swipeFlags) {
+        this.swipeFlags = swipeFlags;
     }
 
 

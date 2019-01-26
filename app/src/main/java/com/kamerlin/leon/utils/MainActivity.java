@@ -7,25 +7,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
-
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView mListView;
+    private String mTitle;
+    private String mColorName;
+    private TextInputEditText mTextInputEditText;
 
     @SuppressLint("CheckResult")
     @Override
@@ -70,35 +64,37 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void onError(MaterialPalettePickerDialog dialog) {
 
-    }
 
     @SuppressLint("CheckResult")
     private void showMaterialColorPicker() {
+
+
         // show material color picker
         MaterialPalettePickerDialog dialog = new MaterialPalettePickerDialog.Builder()
                 .showTextInputEditText(true)
                 .build();
 
 
+
         dialog.show(getSupportFragmentManager(), MaterialPalettePickerDialog.TAG);
 
 
 
-        Observable.combineLatest(
-                dialog.getColorNameObservable().lastOrError().toObservable(),
-                dialog.getTitleObservable().lastOrError().toObservable(),
-                dialog.getPositiveButtonClickObservable().lastOrError().toObservable(),
-                new Function3<String, String, Boolean, String[]>() {
-                    @Override
-                    public String[] apply(String s, String s2, Boolean aBoolean) {
-                        return new String[] {s, s2};
-                    }
-                }
-        ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(System.out::println, System.err::println);
+        dialog.getTitleObservable().subscribe(s -> mTitle = s);
+
+        dialog.getColorNameObservable().subscribe(s -> mColorName = s);
+        dialog.getTextInputEditTextObservable().subscribe(textInputEditText -> mTextInputEditText = textInputEditText);
+
+        dialog.getPositiveButtonClickObservable().subscribe(aBoolean -> {
+            if (mTitle == null) {
+                mTextInputEditText.setError("Title is required");
+            } else {
+                dialog.dismiss();
+                mTitle = null;
+            }
+        });
+
 
 
     }

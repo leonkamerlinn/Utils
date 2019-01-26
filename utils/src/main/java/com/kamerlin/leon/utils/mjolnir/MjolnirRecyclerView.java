@@ -46,6 +46,8 @@ public class MjolnirRecyclerView extends RecyclerView {
 
     };
 
+
+
     public MjolnirRecyclerView(Context context) {
         super(context);
     }

@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -183,7 +184,6 @@ public class MaterialPalettePickerDialog extends DialogFragment {
                 }
 
 
-
                 colorIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -210,27 +210,30 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         builder.setView(view)
                 .setTitle(mTitle)
                 // Add action buttons
-                .setPositiveButton(mPositiveButtonText, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mPositiveButtonClickedReplaySubject.onNext(true);
-                        mPositiveButtonClickedReplaySubject.onComplete();
-                        mColorNameReplaySubject.onComplete();
-                        mNegativeButtonClickedReplaySubject.onComplete();
-                        mTitleReplaySubject.onComplete();
-                    }
-                })
+                .setPositiveButton(mPositiveButtonText, null)
                 .setNegativeButton(mNegativeButtonText, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mNegativeButtonClickedReplaySubject.onNext(true);
-                        mPositiveButtonClickedReplaySubject.onComplete();
-                        mColorNameReplaySubject.onComplete();
-                        mNegativeButtonClickedReplaySubject.onComplete();
-                        mTitleReplaySubject.onComplete();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        negativeButtonClick();
                     }
                 });
+
+
+
+
+
         return builder.create();
     }
+
+    private void negativeButtonClick() {
+        mNegativeButtonClickedReplaySubject.onNext(true);
+    }
+
+    private void positiveButtonClick() {
+        mPositiveButtonClickedReplaySubject.onNext(true);
+    }
+
+
 
     @Override
     public void onStart() {
@@ -246,8 +249,21 @@ public class MaterialPalettePickerDialog extends DialogFragment {
                 // In portrait
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
+        }
 
 
+
+        getDialog().setCanceledOnTouchOutside(false);
+
+        AlertDialog d = (AlertDialog)getDialog();
+        if(d != null) {
+            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    positiveButtonClick();
+                }
+            });
         }
     }
 
