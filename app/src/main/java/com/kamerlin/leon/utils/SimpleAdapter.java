@@ -1,5 +1,6 @@
 package com.kamerlin.leon.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kamerlin.leon.utils.mjolnir.ActionModeRecyclerViewAdapter;
@@ -47,6 +47,7 @@ public class SimpleAdapter extends ActionModeRecyclerViewAdapter<String> {
         View rootView;
         ImageView iconMove;
 
+        @SuppressLint("ClickableViewAccessibility")
         public MyViewHolder(View itemView) {
             super(itemView);
             tvPosition = itemView.findViewById(R.id.tv_position);

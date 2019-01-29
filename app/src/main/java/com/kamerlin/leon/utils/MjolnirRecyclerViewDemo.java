@@ -40,14 +40,14 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity implements Simple
 
         populateRecyclerView();
 
-        mAdapter.setHeader(R.layout.view_header);
-        mAdapter.setFooter(R.layout.view_footer);
+        //mAdapter.setHeader(R.layout.view_header);
+        //mAdapter.setFooter(R.layout.view_footer);
         mAdapter.setItemColor(Color.MAGENTA);
 
 
         ItemTouchCallback swipeToDeleteCallback = new ItemTouchCallback.Builder(this)
                 .setListener(mAdapter)
-                .setBackgroundColor(Color.RED)
+                .setBackgroundColor(Color.GREEN)
                 .setLeftIcon(R.drawable.ic_delete_white_24)
                 .setRightIcon(R.drawable.ic_delete_white_24)
                 .enableItemViewSwipe(true)

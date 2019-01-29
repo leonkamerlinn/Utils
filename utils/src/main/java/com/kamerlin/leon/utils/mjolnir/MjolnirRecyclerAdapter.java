@@ -275,6 +275,7 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
         }
     }
 
+
     public E get(int index) {
         if (index >= items.size()) {
             throw new IllegalStateException("Index is defined in wrong range!");
@@ -348,6 +349,16 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
             index = index + (hasHeader() ? 1 : 0);
             return index;
         }
+    }
+
+    private int getCalculatedIndex(int index, boolean remove) {
+        if (remove) {
+            index = index + ((hasHeader() && hasFooter()) ? 1 : 0);
+        } else {
+            index = index - ((hasHeader() || hasFooter()) ? 1 : 0);
+        }
+
+        return index;
     }
 
     // region Headers and Footers
@@ -587,14 +598,14 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
     @Override
     public void onItemDismiss(int position) {
 
-        this.remove(position+1);
+        this.remove(getCalculatedIndex(position, true));
     }
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         System.out.println(String.format("From: %s, To: %s", fromPosition, toPosition));
         try {
-            Collections.swap(items, fromPosition-1, toPosition-1);
+            Collections.swap(items, getCalculatedIndex(fromPosition, false), getCalculatedIndex(toPosition, false));
             notifyItemMoved(fromPosition, toPosition);
             notifyItemChanged(fromPosition);
             notifyItemChanged(toPosition);
