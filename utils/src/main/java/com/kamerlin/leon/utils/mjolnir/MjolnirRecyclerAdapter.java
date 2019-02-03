@@ -309,10 +309,13 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
      */
     public void update(Collection<E> newItems, @Nullable DiffUtil.Callback callback) {
         if (callback != null) {
-            pendingUpdates.add(newItems);
+            /*pendingUpdates.add(newItems);
             if (pendingUpdates.size() == 1) {
                 updateData(newItems, callback);
-            }
+            }*/
+
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
+            diffResult.dispatchUpdatesTo(this);
         } else {
             items.clear();
             items.addAll(newItems);
