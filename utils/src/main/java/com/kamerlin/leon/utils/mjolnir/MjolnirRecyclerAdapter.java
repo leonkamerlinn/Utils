@@ -316,6 +316,9 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
 
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(callback);
             diffResult.dispatchUpdatesTo(this);
+            items.clear();
+            items.addAll(newItems);
+
         } else {
             items.clear();
             items.addAll(newItems);
