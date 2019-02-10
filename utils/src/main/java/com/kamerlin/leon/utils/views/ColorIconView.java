@@ -1,4 +1,4 @@
-package com.kamerlin.leon.utils.common;
+package com.kamerlin.leon.utils.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,23 +15,23 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-public class ColorIcon extends LinearLayoutCompat {
+public class ColorIconView extends LinearLayoutCompat {
     private View mView;
     private LinearLayoutCompat mLinearLayoutCompat;
     private ConstraintLayout mRootLayout;
     private String mName;
 
-    public ColorIcon(Context context) {
+    public ColorIconView(Context context) {
         super(context);
         init(null);
     }
 
-    public ColorIcon(Context context, AttributeSet attrs) {
+    public ColorIconView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public ColorIcon(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ColorIconView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -41,8 +41,8 @@ public class ColorIcon extends LinearLayoutCompat {
         mLinearLayoutCompat = mView.findViewById(R.id.smallCircle);
         mRootLayout = mView.findViewById(R.id.rootLayout);
         if (attrs == null)return;
-        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.ColorIcon);
-        boolean active = ta.getBoolean(R.styleable.ColorIcon_active, false);
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.ColorIconView);
+        boolean active = ta.getBoolean(R.styleable.ColorIconView_active, false);
         ta.recycle();
         setActive(active);
     }

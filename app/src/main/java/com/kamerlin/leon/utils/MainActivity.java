@@ -11,7 +11,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.kamerlin.leon.utils.common.MaterialPalettePickerDialog;
+import com.kamerlin.leon.utils.dialog.MaterialPalettePickerFragmentDialog;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // show material color picker
-        MaterialPalettePickerDialog dialog = new MaterialPalettePickerDialog.Builder()
+        MaterialPalettePickerFragmentDialog dialog = new MaterialPalettePickerFragmentDialog.Builder()
                 .showTextInputEditText(true)
                 .build();
 
 
 
-        dialog.show(getSupportFragmentManager(), MaterialPalettePickerDialog.TAG);
+        dialog.show(getSupportFragmentManager(), MaterialPalettePickerFragmentDialog.TAG);
 
 
 
@@ -93,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
                 mTitle = null;
             }
+        });
+
+        dialog.getNegativeButtonClickObservable().subscribe(aBoolean -> {
+            dialog.dismiss();
         });
 
 

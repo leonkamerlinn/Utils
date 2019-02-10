@@ -1,4 +1,4 @@
-package com.kamerlin.leon.utils.common;
+package com.kamerlin.leon.utils.helper;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kamerlin.leon.utils.common.ItemTouchCallback;
 import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.mjolnir.RecyclerViewItemTouchListener;
 

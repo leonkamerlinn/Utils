@@ -2,4 +2,6 @@
     <string name="app_name">Utils</string>
     <string name="close">Close</string>
     <string name="delete">Delete</string>
+    <string name="version_unknown">unknown</string>
+    <string name="app_version">1.0</string>
 </resources>

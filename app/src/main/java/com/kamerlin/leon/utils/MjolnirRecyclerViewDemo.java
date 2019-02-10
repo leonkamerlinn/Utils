@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.kamerlin.leon.utils.common.ItemTouchCallback;
 import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
 
+
 public class MjolnirRecyclerViewDemo extends AppCompatActivity implements SimpleAdapter.StartDrag {
 
     private MjolnirRecyclerView mRecyclerView;

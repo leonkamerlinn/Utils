@@ -1,8 +1,7 @@
-package com.kamerlin.leon.utils.common;
+package com.kamerlin.leon.utils.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,14 +23,16 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.kamerlin.leon.utils.library.R;
 import com.kamerlin.leon.utils.materialpallete.MaterialColor;
 import com.kamerlin.leon.utils.materialpallete.MaterialColorFactory;
+import com.kamerlin.leon.utils.utils.DialogFragmentCancelable;
+import com.kamerlin.leon.utils.views.ColorIconView;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.ReplaySubject;
 
-public class MaterialPalettePickerDialog extends DialogFragment {
-    public static final String TAG = MaterialPalettePickerDialog.class.getSimpleName();
+public class MaterialPalettePickerFragmentDialog extends DialogFragmentCancelable {
+    public static final String TAG = MaterialPalettePickerFragmentDialog.class.getSimpleName();
 
 
 
@@ -42,13 +41,12 @@ public class MaterialPalettePickerDialog extends DialogFragment {
     private boolean mShowTextInputEditText;
     private final ReplaySubject<TextInputEditText> mTextInputEditTextReplaySubject;
     private final ReplaySubject<String> mColorNameReplaySubject;
-    private final ReplaySubject<Boolean> mPositiveButtonClickedReplaySubject;
-    private final ReplaySubject<Boolean> mNegativeButtonClickedReplaySubject;
+
     private final ReplaySubject<String> mTitleReplaySubject;
 
 
     @SuppressLint("CheckResult")
-    private MaterialPalettePickerDialog() {
+    public MaterialPalettePickerFragmentDialog() {
         mTitle = "Material Palette Colors";
         mPositiveButtonText = "Ok";
         mNegativeButtonText = "Cancel";
@@ -57,8 +55,7 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         mTextInputEditTextReplaySubject = ReplaySubject.create();
         mTitleReplaySubject = ReplaySubject.create();
         mColorNameReplaySubject = ReplaySubject.create();
-        mPositiveButtonClickedReplaySubject = ReplaySubject.create();
-        mNegativeButtonClickedReplaySubject = ReplaySubject.create();
+
     }
 
 
@@ -70,18 +67,6 @@ public class MaterialPalettePickerDialog extends DialogFragment {
 
     public Observable<String> getColorNameObservable() {
         return mColorNameReplaySubject
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Boolean> getPositiveButtonClickObservable() {
-        return mPositiveButtonClickedReplaySubject
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Boolean> getNegativeButtonClickObservable() {
-        return mNegativeButtonClickedReplaySubject
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -112,8 +97,8 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         mShowTextInputEditText = show;
     }
 
-    private static MaterialPalettePickerDialog newInstance() {
-        MaterialPalettePickerDialog dialog = new MaterialPalettePickerDialog();
+    private static MaterialPalettePickerFragmentDialog newInstance() {
+        MaterialPalettePickerFragmentDialog dialog = new MaterialPalettePickerFragmentDialog();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -169,8 +154,8 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         }
         FlexboxLayout rootLayout = view.findViewById(R.id.rootLayout);
         for (int i = 0; i < rootLayout.getChildCount(); i++) {
-            if (rootLayout.getChildAt(i) instanceof ColorIcon) {
-                ColorIcon colorIcon = (ColorIcon) rootLayout.getChildAt(i);
+            if (rootLayout.getChildAt(i) instanceof ColorIconView) {
+                ColorIconView colorIcon = (ColorIconView) rootLayout.getChildAt(i);
                 String colorName = MaterialColor.getOrderdColors()[i];
                 colorIcon.setColor(MaterialColorFactory.getColor(colorName));
                 colorIcon.setId(i);
@@ -190,9 +175,9 @@ public class MaterialPalettePickerDialog extends DialogFragment {
                         int id = v.getId();
                         if (id == mCurrentActive)return;
 
-                        if (v instanceof ColorIcon) {
-                            ColorIcon current = (ColorIcon)v;
-                            ColorIcon previous = (ColorIcon) rootLayout.getChildAt(mCurrentActive);
+                        if (v instanceof ColorIconView) {
+                            ColorIconView current = (ColorIconView)v;
+                            ColorIconView previous = (ColorIconView) rootLayout.getChildAt(mCurrentActive);
                             previous.setActive(false);
                             current.setActive(true);
                             mCurrentActive = id;
@@ -205,34 +190,14 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         }
 
 
-
-
         builder.setView(view)
                 .setTitle(mTitle)
                 // Add action buttons
                 .setPositiveButton(mPositiveButtonText, null)
-                .setNegativeButton(mNegativeButtonText, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        negativeButtonClick();
-                    }
-                });
-
-
-
-
+                .setNegativeButton(mNegativeButtonText, null);
 
         return builder.create();
     }
-
-    private void negativeButtonClick() {
-        mNegativeButtonClickedReplaySubject.onNext(true);
-    }
-
-    private void positiveButtonClick() {
-        mPositiveButtonClickedReplaySubject.onNext(true);
-    }
-
 
 
     @Override
@@ -252,31 +217,7 @@ public class MaterialPalettePickerDialog extends DialogFragment {
         }
 
 
-
-        getDialog().setCanceledOnTouchOutside(false);
-
-        AlertDialog d = (AlertDialog)getDialog();
-        if(d != null) {
-            Button positiveButton = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    positiveButtonClick();
-                }
-            });
-        }
     }
-
-    @Override
-    public void onDestroyView() {
-        if (getDialog() != null && getRetainInstance()) {
-            getDialog().setDismissMessage(null);
-        }
-        super.onDestroyView();
-    }
-
-
-
 
 
 
@@ -313,8 +254,8 @@ public class MaterialPalettePickerDialog extends DialogFragment {
             return this;
         }
 
-        public MaterialPalettePickerDialog build() {
-            MaterialPalettePickerDialog dialog = MaterialPalettePickerDialog.newInstance();
+        public MaterialPalettePickerFragmentDialog build() {
+            MaterialPalettePickerFragmentDialog dialog = MaterialPalettePickerFragmentDialog.newInstance();
 
             dialog.setTitle(title);
             dialog.setNegativeButtonText(negativeButtonText);

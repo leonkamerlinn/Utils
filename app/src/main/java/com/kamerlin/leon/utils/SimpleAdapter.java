@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.kamerlin.leon.utils.mjolnir.ActionModeRecyclerViewAdapter;
 import com.kamerlin.leon.utils.mjolnir.MjolnirViewHolder;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 

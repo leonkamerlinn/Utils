@@ -48,97 +48,97 @@
             app:alignContent="stretch">
 
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center" />
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
 
-            <com.kamerlin.leon.utils.common.ColorIcon
+            <com.kamerlin.leon.utils.views.ColorIconView
                 android:layout_width="62dp"
                 android:layout_height="62dp"
                 android:gravity="center"/>
