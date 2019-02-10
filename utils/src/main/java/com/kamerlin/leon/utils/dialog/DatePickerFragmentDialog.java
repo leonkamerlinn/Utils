@@ -2,6 +2,7 @@ package com.kamerlin.leon.utils.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import java.util.Calendar;
@@ -33,7 +34,8 @@ public class DatePickerFragmentDialog extends DialogFragment {
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
-        return com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(null, year, month, day);
+        com.wdullaer.materialdatetimepicker.date.DatePickerDialog dialog = com.wdullaer.materialdatetimepicker.date.DatePickerDialog.newInstance(null, year, month, day);
+        return dialog;
     }
 
     public static com.wdullaer.materialdatetimepicker.date.DatePickerDialog Material(com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener listener) {
