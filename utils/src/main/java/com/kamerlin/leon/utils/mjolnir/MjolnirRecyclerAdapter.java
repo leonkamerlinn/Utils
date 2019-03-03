@@ -597,7 +597,6 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
 
     @Override
     public void onItemDismiss(int position) {
-
         this.remove(getCalculatedIndex(position, true));
     }
 
@@ -621,10 +620,13 @@ public abstract class MjolnirRecyclerAdapter<E> extends RecyclerView.Adapter<Mjo
             super(itemView);
         }
 
+        public ItemViewHolder(View itemView, View swipeItemView) {
+            super(itemView, swipeItemView);
+        }
+
 
         @Override
         protected void bind(E item, int position) {
-            itemView.setBackgroundColor(Color.WHITE);
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClick(position, item);

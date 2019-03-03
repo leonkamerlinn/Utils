@@ -24,7 +24,9 @@ public class TimePickerFragmentDialog extends DialogFragment {
     }
 
     public static com.wdullaer.materialdatetimepicker.time.TimePickerDialog Material() {
-        return com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(null, false);
+        com.wdullaer.materialdatetimepicker.time.TimePickerDialog dialog = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(null, false);
+
+        return dialog;
     }
 
     public static com.wdullaer.materialdatetimepicker.time.TimePickerDialog Material(com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener listener) {

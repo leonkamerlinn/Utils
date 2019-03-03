@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         // populate ListView
         String[] data = new String[] {
                 "Material Color Picker",
-                "Mjolnir RecyclerView"
+                "Mjolnir RecyclerView",
+                "Canvas"
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         showMjolnirRecyclerView();
                         break;
+
+                    case 2:
+                        Intent intent = new Intent(MainActivity.this, CanvasDrawing.class);
+                        startActivity(intent);
+                    break;
                 }
             }
         });

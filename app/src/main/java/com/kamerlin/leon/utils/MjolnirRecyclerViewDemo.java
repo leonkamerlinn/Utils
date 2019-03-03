@@ -10,11 +10,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.kamerlin.leon.utils.common.ItemTouchCallback;
+import com.kamerlin.leon.utils.helper.ItemTouchCallbackHelper;
+import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerAdapter;
 import com.kamerlin.leon.utils.mjolnir.MjolnirRecyclerView;
 
 
-public class MjolnirRecyclerViewDemo extends AppCompatActivity implements SimpleAdapter.StartDrag {
+public class MjolnirRecyclerViewDemo extends AppCompatActivity {
 
     private MjolnirRecyclerView mRecyclerView;
     private SimpleAdapter mAdapter;
@@ -35,6 +36,8 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity implements Simple
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setEmptyView(findViewById(R.id.empty_view));
         mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
     private void setupAdapter() {
@@ -43,23 +46,16 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity implements Simple
 
         //mAdapter.setHeader(R.layout.view_header);
         //mAdapter.setFooter(R.layout.view_footer);
-        mAdapter.setItemColor(Color.MAGENTA);
+       // mAdapter.setItemColor(Color.MAGENTA);
 
 
-        ItemTouchCallback swipeToDeleteCallback = new ItemTouchCallback.Builder(this)
-                .setListener(mAdapter)
-                .setBackgroundColor(Color.GREEN)
-                .setLeftIcon(R.drawable.ic_delete_white_24)
-                .setRightIcon(R.drawable.ic_delete_white_24)
-                .enableItemViewSwipe(true)
-                .enableLongPressDrag(true)
-                .build();
+        ItemTouchCallbackHelper itemTouchCallbackHelper = new ItemTouchCallbackHelper(this, mAdapter);
 
 
-        itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
+
+
+        itemTouchHelper = new ItemTouchHelper(itemTouchCallbackHelper);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
-
-
 
 
     }
@@ -73,9 +69,4 @@ public class MjolnirRecyclerViewDemo extends AppCompatActivity implements Simple
         mAdapter.add("6");
     }
 
-    @Override
-    public void onDrag(RecyclerView.ViewHolder viewHolder) {
-        Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
-        itemTouchHelper.startDrag(viewHolder);
-    }
 }

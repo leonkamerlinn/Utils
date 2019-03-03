@@ -97,9 +97,12 @@ public abstract class ActionModeRecyclerViewAdapter<E> extends MjolnirRecyclerAd
 
     public abstract class ItemViewHolder extends MjolnirViewHolder<E> {
 
-
         public ItemViewHolder(View itemView) {
             super(itemView);
+        }
+
+        public ItemViewHolder(View itemView, View swipeItemView) {
+            super(itemView, swipeItemView);
         }
 
         void selectItem(E item) {
