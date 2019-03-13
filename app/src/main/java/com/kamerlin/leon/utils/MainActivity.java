@@ -19,7 +19,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.functions.Function;
 
 
 public class MainActivity extends AppCompatActivity {

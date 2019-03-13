@@ -2,7 +2,4 @@
 <manifest package="com.kamerlin.leon.utils.library">
 
 
-    <uses-permission
-        name="android.permission.ACCESS_COARSE_LOCATION"
-        maxSdkVersion="22" />
 </manifest>
