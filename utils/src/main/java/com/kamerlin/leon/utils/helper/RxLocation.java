@@ -75,22 +75,30 @@ public class RxLocation {
         return INSTANCE;
     }
 
-    public void stop() {
+    @SuppressLint("MissingPermission")
+    public void stop() throws ProviderIsNotEnabledException {
         // Remove the listener you previously added
-        mLocationManager.removeUpdates(mLocationListener);
+        if (isProviderEnabled()) {
+            mLocationManager.removeUpdates(mLocationListener);
+        } else {
+            throw new ProviderIsNotEnabledException("Provider is not enabled");
+        }
+
     }
 
     public void start() throws ProviderIsNotEnabledException {
         requestLocation();
     }
 
+    private boolean isProviderEnabled() {
+        return mLocationManager.isProviderEnabled(getProvider());
+    }
     @Nullable
     @SuppressLint("MissingPermission")
-    private Location getLastKnownLocation() throws ProviderIsNotEnabledException {
-        String locationProvider = LocationManager.GPS_PROVIDER;
+    public Location getLastKnownLocation() throws ProviderIsNotEnabledException {
         // Or use LocationManager.GPS_PROVIDER
-        if (mLocationManager.isProviderEnabled(locationProvider)) {
-            Location location = mLocationManager.getLastKnownLocation(locationProvider);
+        if (isProviderEnabled()) {
+            Location location = mLocationManager.getLastKnownLocation(getProvider());
             if (location != null) {
                 if (isBetterLocation(location, getCurrentBestLocation())) {
                     mCurrentBestLocation = location;
@@ -106,7 +114,7 @@ public class RxLocation {
 
     @SuppressLint("MissingPermission")
     private void requestLocation() throws ProviderIsNotEnabledException {
-        if (mLocationManager.isProviderEnabled(getProvider())) {
+        if (isProviderEnabled()) {
             mLocationManager.requestLocationUpdates(getProvider(), mMinTime, mMinDistance, mLocationListener);
         } else {
             throw new ProviderIsNotEnabledException("Provider is not enabled");
