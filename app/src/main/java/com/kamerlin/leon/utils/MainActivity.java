@@ -1,7 +1,11 @@
 package com.kamerlin.leon.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,8 +14,12 @@ import android.widget.ListView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.kamerlin.leon.utils.dialog.MaterialPalettePickerFragmentDialog;
+import com.kamerlin.leon.utils.helper.RxLocation;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import io.reactivex.functions.Function;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private String mColorName;
     private TextInputEditText mTextInputEditText;
 
+    private RxLocation mRxLocation;
+
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +38,53 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mListView = findViewById(R.id.listView);
         populateAndSetupListView();
+
+
+
+        mRxLocation = RxLocation.getInstance(this);
+        mRxLocation.getLocationObservable()
+                .map(Location::getLatitude)
+                .subscribe(System.out::println);
+
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION).subscribe(permission -> {
+            if (permission.name.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                if (permission.granted) {
+                    try {
+                        mRxLocation.setProvider(LocationManager.GPS_PROVIDER);
+                        mRxLocation.setMinTime(10000);
+                        mRxLocation.start();
+                    } catch (RxLocation.ProviderIsNotEnabledException e) {
+                        e.printStackTrace();
+                        buildAlertMessageNoGps();
+                    }
+                }
+            } else if (permission.shouldShowRequestPermissionRationale) {
+                buildAlertMessageNoGps();
+            }
+        });
+
+
+
+    }
+
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void populateAndSetupListView() {
