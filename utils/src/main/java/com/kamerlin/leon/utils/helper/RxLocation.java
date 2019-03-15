@@ -22,12 +22,14 @@ public class RxLocation {
     private final LocationListener mLocationListener;
     private PublishSubject<Location> mLocationPublishSubject = PublishSubject.create();
     private PublishSubject<Boolean> mProviderStatusChangedPublisher = PublishSubject.create();
+    private boolean mIsTracking = false;
 
     private RxLocation(Context context) {
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 if (location != null) {
+                    mIsTracking = true;
                     if (isBetterLocation(location, mCurrentBestLocation)) {
                         mCurrentBestLocation = location;
                     }
@@ -43,6 +45,7 @@ public class RxLocation {
             }
 
             public void onProviderDisabled(String provider) {
+                mIsTracking = false;
                 mProviderStatusChangedPublisher.onNext(false);
             }
         };
@@ -76,17 +79,17 @@ public class RxLocation {
     }
 
     @SuppressLint("MissingPermission")
-    public void stop() throws ProviderIsNotEnabledException {
+    public void stop() {
+        mIsTracking = false;
         // Remove the listener you previously added
-        if (isProviderEnabled()) {
-            mLocationManager.removeUpdates(mLocationListener);
-        } else {
-            throw new ProviderIsNotEnabledException("Provider is not enabled");
-        }
-
+        mLocationManager.removeUpdates(mLocationListener);
     }
 
     public void start() throws ProviderIsNotEnabledException {
+        requestLocation();
+    }
+
+    public void update() throws ProviderIsNotEnabledException {
         requestLocation();
     }
 
@@ -112,19 +115,23 @@ public class RxLocation {
         return null;
     }
 
+    public boolean isTracking() {
+        return mIsTracking;
+    }
+
     @SuppressLint("MissingPermission")
     private void requestLocation() throws ProviderIsNotEnabledException {
         if (isProviderEnabled()) {
-            mLocationManager.requestLocationUpdates(getProvider(), mMinTime, mMinDistance, mLocationListener);
+            mIsTracking = true;
+            mLocationManager.requestLocationUpdates(getProvider(), getMinTime(), getMinDistance(), mLocationListener);
         } else {
             throw new ProviderIsNotEnabledException("Provider is not enabled");
         }
     }
 
-    public void setMinTime(int minTime) throws ProviderIsNotEnabledException {
+    public void setMinTime(int minTime) {
         if (minTime != getMinTime()) {
             mMinTime = minTime;
-            requestLocation();
         }
     }
 
@@ -132,10 +139,9 @@ public class RxLocation {
         return mMinTime;
     }
 
-    public void setMinDistance(int minDistance) throws ProviderIsNotEnabledException {
+    public void setMinDistance(int minDistance) {
         if (minDistance != getMinDistance()) {
             mMinDistance = minDistance;
-            requestLocation();
         }
 
     }
@@ -144,10 +150,9 @@ public class RxLocation {
         return mMinDistance;
     }
 
-    public void setProvider(String provider) throws ProviderIsNotEnabledException {
+    public void setProvider(String provider) {
         if (!provider.equals(getProvider())) {
             mProvider = provider;
-            requestLocation();
         }
 
 
@@ -213,6 +218,7 @@ public class RxLocation {
             super(errorMessage);
         }
     }
+
 
 
 }
